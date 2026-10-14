@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hu" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Page</title>
+</head>
+
+<body>
+
+<h2>Reservations</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Car ID</th>
+        <th>E-mail</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Reservation start date</th>
+        <th>Reservation end date</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="reservation : ${adminPageDTO.allReservations}">
+        <td th:text="${reservation.name}"></td>
+
+        <td>
+            <a th:href="@{/admin/car/edit/start(carId=${reservation.carId},apiKey=${apiKey})}"
+               th:text="${reservation.carId}">
+            </a>
+        </td>
+
+        <td th:text="${reservation.email}"></td>
+        <td th:text="${reservation.address}"></td>
+        <td th:text="${reservation.phone}"></td>
+        <td th:text="${reservation.startDate}"></td>
+        <td th:text="${reservation.endDate}"></td>
+        <td th:text="${reservation.price}"></td>
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(adminPageDTO.allReservations)}">
+        <td colspan="8">There are no active reservations</td>
+    </tr>
+    </tbody>
+</table>
+
+
+<h2>Cars</h2>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Car ID</th>
+        <th>Type</th>
+        <th>Daily price</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="car : ${adminPageDTO.allCars}">
+        <td>
+            <a th:href="@{/admin/car/edit/start(carId=${car.id},apiKey=${apiKey})}"
+               th:text="${car.id}">
+            </a>
+        </td>
+
+        <td th:text="${car.type}"></td>
+        <td th:text="${car.price}"></td>
+        <td th:text="${car.active ? 'Yes' : 'No'}"></td>
+    </tr>
+
+    <tr th:if="${#lists.isEmpty(adminPageDTO.allCars)}">
+        <td colspan="4">No cars are available.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

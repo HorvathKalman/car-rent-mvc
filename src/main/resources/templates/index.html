@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/cars" method="get">
+    <label>Start date:</label>
+    <input type="date" name="startDate" required>
+    <label>End date:</label>
+    <input type="date" name="endDate" required>
+    <button type="submit">Get cars</button>
+</form>
+<br>
+
+
+<<form action="/cars/res/start" method="get"
+       th:if="${freeCarsDTO != null}">
+
+    <label for="carId">Choose a car:</label>
+
+    <select name="carId" id="carId" required>
+        <option value="">-- Select a car --</option>
+
+        <option th:each="car : ${freeCarsDTO.freeCars}"
+                th:value="${car.id}"
+                th:text="${car.type + ' - ' + car.price}">
+        </option>
+    </select>
+
+    <input type="hidden" name="resDateDTO.startDate"
+           th:value="${freeCarsDTO.resDateDTO.startDate}">
+
+    <input type="hidden" name="resDateDTO.endDate"
+           th:value="${freeCarsDTO.resDateDTO.endDate}">
+
+    <button type="submit">Select car</button>
+</form>
+
+</body>
+</html>
