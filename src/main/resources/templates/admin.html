@@ -29,8 +29,8 @@
         <td th:text="${reservation.name}"></td>
 
         <td>
-            <a th:href="@{/admin/car/edit/start(carId=${reservation.carId},apiKey=${apiKey})}"
-               th:text="${reservation.carId}">
+            <a
+                    th:text="${reservation.carId}">
             </a>
         </td>
 
@@ -71,7 +71,7 @@
 
         <td th:text="${car.type}"></td>
         <td th:text="${car.price}"></td>
-        <td th:text="${car.active ? 'Yes' : 'No'}"></td>
+        <td th:text="${car.active ? 'Free' : 'Reserved'}"></td>
     </tr>
 
     <tr th:if="${#lists.isEmpty(adminPageDTO.allCars)}">
@@ -79,6 +79,38 @@
     </tr>
     </tbody>
 </table>
+<br>
+
+<details>
+    <summary>+ Add new car</summary>
+
+    <form th:action="@{/admin/car/new}" method="post">
+        <input type="hidden" name="apiKey" th:value="${apiKey}">
+        <table border="1">
+            <tr>
+                <th>Type</th>
+                <th>Price</th>
+                <th>Active</th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" name="type" required>
+                </td>
+                <td>
+                    <input type="number" name="price" min="0" required>
+                </td>
+                <td>
+                    <select name="active" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <button type="submit">Save</button>
+    </form>
+</details>
 
 </body>
 </html>

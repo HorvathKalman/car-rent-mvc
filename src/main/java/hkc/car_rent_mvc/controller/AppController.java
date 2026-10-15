@@ -30,19 +30,21 @@ public class AppController {
         this.adminApiKey = adminApiKey;
         this.adminApiKey2 = adminApiKey2;
     }
+
     //     ------------------------ main ------------------------
     @GetMapping("/")
     public String index(
             Model model,
             @RequestParam(name = "apiKey", required = false) String apiKey) {
-
+        //http://localhost:8080/?apiKey=adminKey1
         if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
             AdminPageDTO adminPageDTO = adminService.loadAdminPage();
             model.addAttribute("adminPageDTO", adminPageDTO);
-            model.addAttribute("adminApiKey", adminApiKey);
+            model.addAttribute("apiKey", apiKey);
             return "admin.html";
+        } else {
+            return "index.html";
         }
-        return "index.html";
     }
 
     //     ------------------------ user ------------------------
@@ -65,11 +67,12 @@ public class AppController {
         model.addAttribute("selectedCarForResPageDTO", selectedCarForResPageDTO);
         return "reservation.html";
     }
+
     @PostMapping("/cars/res/finish")
     public String saveReservation(
             Model model,
             UserResDTO reservation
-    ){
+    ) {
         SimpleResponseDTO resultText = userService.saveReservation(reservation);
         model.addAttribute("resultText", resultText);
         return "result.html";
@@ -77,7 +80,58 @@ public class AppController {
 
     //     ------------------------ admin ------------------------
 
+    @GetMapping("/admin/car/edit/start")
+    public String loadCarEditPage(
+            Model model,
+            @RequestParam(name = "apiKey", required = false) String apiKey,
+            @RequestParam("carId") Integer carId
+    ) {
+        if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
+            CarDTO selectedCarDTO = adminService.getCarForEdit(carId);
+            model.addAttribute("carDTO", selectedCarDTO);
+            model.addAttribute("apiKey", apiKey);
+            return "adminEditCar.html";
+        } else {
+            return "index.html";
+        }
+    }
 
+    @PostMapping("/admin/car/edit/finish")
+    public String saveEditedCar(
+            Model model,
+            CarDTO carDTO,
+            @RequestParam(name = "apiKey", required = false) String apiKey
+    ) {
+        if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
 
+            SimpleResponseDTO responseDTO = adminService.saveEditedCar(carDTO);
+            AdminPageDTO adminPageDTO = adminService.loadAdminPage();
+
+            model.addAttribute("responseDTO", responseDTO);
+            model.addAttribute("adminPageDTO", adminPageDTO);
+            model.addAttribute("apiKey", apiKey);
+            return "admin.html";
+        } else {
+            return "index.html";
+        }
+    }
+
+    @PostMapping("/admin/car/new")
+    public String saveNewCar(
+            Model model,
+            NewCarDTO newCarDTO,
+            @RequestParam(name = "apiKey", required = false) String apiKey
+    ) {
+        if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
+            SimpleResponseDTO responseDTO = adminService.saveCar(newCarDTO);
+            AdminPageDTO adminPageDTO = adminService.loadAdminPage();
+
+            model.addAttribute("responseDTO", responseDTO);
+            model.addAttribute("adminPageDTO", adminPageDTO);
+            return "admin.html";
+        } else {
+            return "index.html";
+        }
+    }
 }
 
