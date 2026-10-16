@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
+
 @Controller
 public class AppController {
     private UserService userService;
@@ -69,9 +71,31 @@ public class AppController {
             Model model,
             UserSelectionDTO selectedCar
     ) {
-        UserSelectionDTO selectedCarForResPageDTO = userService.getSelectedCar(selectedCar);
+        UserSelectionDTO selectedCarForResPageDTO =
+                userService.getSelectedCar(selectedCar);
 
-        model.addAttribute("selectedCarForResPageDTO", selectedCarForResPageDTO);
+        byte[] picture =
+                selectedCarForResPageDTO.getCarDTO().getPicture();
+
+        System.out.println("Car ID: "
+                + selectedCarForResPageDTO.getCarDTO().getId());
+
+        System.out.println("Picture is null: " + (picture == null));
+
+        if (picture != null) {
+            System.out.println("Picture size: " + picture.length);
+
+            String pictureBase64 = java.util.Base64.getEncoder()
+                    .encodeToString(picture);
+
+            model.addAttribute("pictureBase64", pictureBase64);
+        }
+
+        model.addAttribute(
+                "selectedCarForResPageDTO",
+                selectedCarForResPageDTO
+        );
+
         return "user/reservation.html";
     }
 
@@ -112,12 +136,12 @@ public class AppController {
     public String saveEditedCar(
             Model model,
             @RequestParam(name = "apiKey", required = false) String apiKey,
-            CarDTO carDTO
+            NewCarDTO newCarDTO
 
-    ) {
+    ) throws IOException {
         if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
 
-            SimpleResponseDTO responseDTO = adminService.saveEditedCar(carDTO);
+            SimpleResponseDTO responseDTO = adminService.saveEditedCar(newCarDTO);
             AdminPageDTO adminPageDTO = adminService.loadAdminPage();
 
             model.addAttribute("responseDTO", responseDTO);

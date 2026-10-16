@@ -21,7 +21,7 @@
 
     <label>Choose a car:</label>
 
-    <select name="carId" required>
+    <select name="carDTO.id" required>
         <option value="">-- Select a free car --</option>
 
         <option th:each="car : ${freeCarsDTO.freeCars}"
@@ -30,10 +30,12 @@
         </option>
     </select>
 
-    <input type="hidden" name="resDateDTO.startDate"
+    <input type="hidden"
+           name="resDateDTO.startDate"
            th:value="${freeCarsDTO.resDateDTO.startDate}">
 
-    <input type="hidden" name="resDateDTO.endDate"
+    <input type="hidden"
+           name="resDateDTO.endDate"
            th:value="${freeCarsDTO.resDateDTO.endDate}">
 
     <button type="submit">Select car</button>

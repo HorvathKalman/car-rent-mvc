@@ -6,11 +6,11 @@ public class CarDTO {
 
     private Integer id;
     private String type;
-    private int price;
-    private boolean active;
+    private Integer price;
+    private Boolean active;
     private byte[] picture;
 
-    public CarDTO(Integer id, String type, int price, boolean active, byte[] picture) {
+    public CarDTO(Integer id, String type, Integer price, Boolean active, byte[] picture) {
         this.id = id;
         this.type = type;
         this.price = price;
@@ -34,19 +34,19 @@ public class CarDTO {
         this.type = type;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 

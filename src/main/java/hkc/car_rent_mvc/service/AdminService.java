@@ -8,6 +8,7 @@ import hkc.car_rent_mvc.repository.CarRepository;
 import hkc.car_rent_mvc.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class AdminService {
         return responseDTO;
     }
 
-    public SimpleResponseDTO saveEditedCar(CarDTO carDTO) {
+    public SimpleResponseDTO saveEditedCar(NewCarDTO carDTO) throws IOException {
         SimpleResponseDTO responseDTO = null;
 
         Car car = carRepository.findById(carDTO.getId())
@@ -99,12 +100,15 @@ public class AdminService {
         car.setDailyPrice(carDTO.getPrice());
         car.setActive(carDTO.isActive());
 
-        byte[] picture = carDTO.getPicture();
+        MultipartFile picture = carDTO.getPicture();
 
-        if (picture != null && picture.length > 0) {
-            car.setPicture(picture);
+        if (picture != null && !picture.isEmpty()) {
+            try {
+                car.setPicture(picture.getBytes());
+            } catch (IOException e) {
+                throw new RuntimeException("A kép beolvasása sikertelen", e);
+            }
         }
-
         carRepository.save(car);
         return responseDTO = new SimpleResponseDTO(UserReservationStatuses.OK_SAVED.toString());
     }

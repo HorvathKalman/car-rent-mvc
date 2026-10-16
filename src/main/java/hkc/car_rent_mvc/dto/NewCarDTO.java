@@ -4,16 +4,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class NewCarDTO {
 
+    private Integer id;
     private String type;
     private int price;
     private boolean active;
     private MultipartFile picture;
 
-    public NewCarDTO(String type, int price, boolean active, MultipartFile picture) {
+    public NewCarDTO(Integer id, String type, int price, boolean active, MultipartFile picture) {
+        this.id = id;
         this.type = type;
         this.price = price;
         this.active = active;
         this.picture = picture;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getType() {
