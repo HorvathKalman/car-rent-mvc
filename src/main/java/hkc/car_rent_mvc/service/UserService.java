@@ -27,13 +27,13 @@ public class UserService {
         this.reservationRepository = reservationRepository;
     }
 
-    public FreeCarsDTO getFreeCars(ResDateDTO dateRange) {
+    public FreeCarsDTO getAllCars(ResDateDTO dateRange) {
+        FreeCarsDTO requestDTO = null;
+
         List<CarDTO> carListDTO = new ArrayList<>();
 
-        List<Car> freeCars = reservationRepository.getAllFreeCars(
-                dateRange.getStartDate(),
-                dateRange.getEndDate()
-        );
+        Iterable<Car> freeCars = carRepository.findAll();
+
         for (Car tempCar : freeCars) {
 
             CarDTO tempCarDTO = new CarDTO(
@@ -45,20 +45,32 @@ public class UserService {
             );
             carListDTO.add(tempCarDTO);
         }
-
-        return new FreeCarsDTO(carListDTO, dateRange);
+        requestDTO = new FreeCarsDTO(
+                carListDTO,
+                dateRange
+        );
+        return requestDTO;
     }
 
     public UserSelectionDTO getSelectedCar(UserSelectionDTO selectedCar) {
         UserSelectionDTO requestDTO = null;
 
-        Optional<Car> carOpt = carRepository.findById(selectedCar.getCarId());
+        Optional<Car> carOpt = carRepository.findById(selectedCar.getCarDTO().getId());
 
         if (carOpt.isPresent()) {
+
             Car car = carOpt.get();
 
-            requestDTO = new UserSelectionDTO(
+            CarDTO carDTO = new CarDTO(
                     car.getId(),
+                    car.getType(),
+                    car.getDailyPrice(),
+                    car.isActive(),
+                    car.getPicture()
+            );
+
+            requestDTO = new UserSelectionDTO(
+                    carDTO,
                     selectedCar.getResDateDTO()
             );
         }
@@ -72,14 +84,14 @@ public class UserService {
                 requestUserResDTO.getUserSelectionDTO().getResDateDTO().getStartDate(),
                 requestUserResDTO.getUserSelectionDTO().getResDateDTO().getEndDate());
 
-        Car tempCarForPrice = carRepository.findById(requestUserResDTO.getUserSelectionDTO().getCarId()).orElse(null);
+        Car tempCarForPrice = carRepository.findById(requestUserResDTO.getUserSelectionDTO().getCarDTO().getId()).orElse(null);
 
         int carDailyPrice = tempCarForPrice.getDailyPrice();
         int reservationDailyPrice = carDailyPrice * numOfDates;
 
         Reservation saveResult = reservationRepository.save(new Reservation(
                 null,
-                requestUserResDTO.getUserSelectionDTO().getCarId(),
+                requestUserResDTO.getUserSelectionDTO().getCarDTO().getId(),
                 requestUserResDTO.getName(),
                 requestUserResDTO.getEmail(),
                 requestUserResDTO.getAddress(),

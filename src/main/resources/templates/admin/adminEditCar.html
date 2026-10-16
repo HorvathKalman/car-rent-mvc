@@ -5,14 +5,13 @@
     <meta charset="UTF-8">
     <title>Edit Car</title>
 </head>
-
 <body>
 
 <h2>Edit Car</h2>
 
-<form th:action="@{/admin/car/edit/finish}" method="post">
+<form th:action="@{/admin/car/edit/finish}" method="post" enctype="multipart/form-data">
 
-    <input type="hidden" name="carId" th:value="${carDTO.id}">
+    <input type="hidden" name="id" th:value="${carDTO.id}">
     <input type="hidden" name="apiKey" th:value="${apiKey}">
 
     <label>Type:</label>
@@ -22,7 +21,7 @@
     <input type="number" name="price" th:value="${carDTO.price}" min="0" required>
     <br><br>
     <label>Image:</label>
-    <input type="text" name="picture" th:value="${carDTO.picture}">
+    <input type="file" name="picture" accept="image/*">
     <br><br>
     <label>Active:</label>
     <select name="active">

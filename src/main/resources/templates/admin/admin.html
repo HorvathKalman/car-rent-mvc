@@ -5,13 +5,10 @@
     <meta charset="UTF-8">
     <title>Admin Page</title>
 </head>
-
 <body>
 
 <h2>Reservations</h2>
-
 <table border="1">
-    <thead>
     <tr>
         <th>Name</th>
         <th>Car ID</th>
@@ -22,18 +19,10 @@
         <th>Reservation end date</th>
         <th>Price</th>
     </tr>
-    </thead>
 
-    <tbody>
     <tr th:each="reservation : ${adminPageDTO.allReservations}">
         <td th:text="${reservation.name}"></td>
-
-        <td>
-            <a
-                    th:text="${reservation.carId}">
-            </a>
-        </td>
-
+        <td th:text="${reservation.carId}"></td>
         <td th:text="${reservation.email}"></td>
         <td th:text="${reservation.address}"></td>
         <td th:text="${reservation.phone}"></td>
@@ -45,23 +34,19 @@
     <tr th:if="${#lists.isEmpty(adminPageDTO.allReservations)}">
         <td colspan="8">There are no active reservations</td>
     </tr>
-    </tbody>
 </table>
+<br>
 
 
 <h2>Cars</h2>
-
 <table border="1">
-    <thead>
     <tr>
         <th>Car ID</th>
         <th>Type</th>
         <th>Daily price</th>
         <th>Status</th>
     </tr>
-    </thead>
 
-    <tbody>
     <tr th:each="car : ${adminPageDTO.allCars}">
         <td>
             <a th:href="@{/admin/car/edit/start(carId=${car.id},apiKey=${apiKey})}"
@@ -77,15 +62,15 @@
     <tr th:if="${#lists.isEmpty(adminPageDTO.allCars)}">
         <td colspan="4">No cars are available.</td>
     </tr>
-    </tbody>
 </table>
 <br>
 
 <details>
-    <summary>+ Add new car</summary>
+    <summary><h3>+ Add new car</h3></summary>
 
     <form th:action="@{/admin/car/new}" method="post">
         <input type="hidden" name="apiKey" th:value="${apiKey}">
+
         <table border="1">
             <tr>
                 <th>Type</th>

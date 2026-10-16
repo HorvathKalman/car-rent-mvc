@@ -2,20 +2,20 @@ package hkc.car_rent_mvc.dto;
 
 public class UserSelectionDTO {
 
-    private int carId;
+    private CarDTO carDTO;
     private ResDateDTO resDateDTO;
 
-    public UserSelectionDTO(int carId, ResDateDTO resDateDTO) {
-        this.carId = carId;
+    public UserSelectionDTO(CarDTO carDTO, ResDateDTO resDateDTO) {
+        this.carDTO = carDTO;
         this.resDateDTO = resDateDTO;
     }
 
-    public int getCarId() {
-        return carId;
+    public CarDTO getCarDTO() {
+        return carDTO;
     }
 
-    public void setCarId(int carId) {
-        this.carId = carId;
+    public void setCarDTO(CarDTO carDTO) {
+        this.carDTO = carDTO;
     }
 
     public ResDateDTO getResDateDTO() {

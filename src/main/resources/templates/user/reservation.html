@@ -6,38 +6,63 @@
 </head>
 <body>
 
-<h2>Reservation datas</h2>
+<h2>Add reservation</h2>
 
 <form action="/cars/res/finish" method="post">
 
-    <h3>Personal datas</h3>
+    <h3>Personal data</h3>
 
     <label>Name:</label>
     <input type="text" name="name" required>
     <br><br>
-
     <label >E-mail:</label>
     <input type="email" name="email" required>
     <br><br>
-
     <label>Address:</label>
     <input type="text" name="address" required>
     <br><br>
-
     <label>Phone:</label>
     <input type="tel" name="phone" required>
     <br><br>
 
     <h3>Details of the selected car</h3>
+    <table>
+        <tr>
+            <td>ID:</td>
+            <td th:text="${selectedCarForResPageDTO.carDTO.id}"></td>
+        </tr>
+        <tr>
+            <td>Type:</td>
+            <td th:text="${selectedCarForResPageDTO.carDTO.type}"></td>
+        </tr>
+        <tr>
+            <td>Daily price:</td>
+            <td th:text="${selectedCarForResPageDTO.carDTO.price}"></td>
+        </tr>
+        <tr>
+            <td>Active:</td>
+            <td th:text="${selectedCarForResPageDTO.carDTO.active}"></td>
+        </tr>
+        <tr>
+            <td>Picture:</td>
+            <td>
+                <img
+                        th:if="${selectedCarForResPageDTO.carDTO.picture != null}"
+                        th:src="|data:image/jpeg;base64,${T(org.springframework.util.Base64Utils).encodeToString(selectedCarForResPageDTO.carDTO.picture)}|"
+                        alt="Car picture"
+                        width="300">
+            </td>
+        </tr>
+    </table>
+
+
 
     <input type="hidden"
            name="userSelectionDTO.carId"
            th:value="${selectedCarForResPageDTO.carId}">
-
     <input type="hidden"
            name="userSelectionDTO.resDateDTO.startDate"
            th:value="${selectedCarForResPageDTO.resDateDTO.startDate}">
-
     <input type="hidden"
            name="userSelectionDTO.resDateDTO.endDate"
            th:value="${selectedCarForResPageDTO.resDateDTO.endDate}">

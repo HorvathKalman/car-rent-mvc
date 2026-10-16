@@ -9,6 +9,8 @@ import hkc.car_rent_mvc.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class AdminService {
         return requestDTO;
     }
 
-    public CarDTO getCarForEdit(Integer carId) {
+    public CarDTO getCarById(Integer carId) {
         CarDTO responseDTO = null;
 
         Car car = carRepository.findById(carId).orElse(null);
@@ -85,29 +87,43 @@ public class AdminService {
     public SimpleResponseDTO saveEditedCar(CarDTO carDTO) {
         SimpleResponseDTO responseDTO = null;
 
-        int updatedRows = carRepository.updateCar(
-                carDTO.getId(),
-                carDTO.getType(),
-                carDTO.getPrice(),
-                carDTO.isActive()
-        );
-        if (updatedRows == 1) {
-            responseDTO = new SimpleResponseDTO(UserReservationStatuses.OK_SAVED.toString());
-        } else {
-            responseDTO = new SimpleResponseDTO(UserReservationStatuses.NOT_OK.toString());
+        Car car = carRepository.findById(carDTO.getId())
+                .orElse(null);
+
+        if (car == null) {
+            return new SimpleResponseDTO(
+                    UserReservationStatuses.NOT_OK.toString());
         }
-        return responseDTO;
+
+        car.setType(carDTO.getType());
+        car.setDailyPrice(carDTO.getPrice());
+        car.setActive(carDTO.isActive());
+
+        byte[] picture = carDTO.getPicture();
+
+        if (picture != null && picture.length > 0) {
+            car.setPicture(picture);
+        }
+
+        carRepository.save(car);
+        return responseDTO = new SimpleResponseDTO(UserReservationStatuses.OK_SAVED.toString());
     }
 
     public SimpleResponseDTO saveCar(NewCarDTO newCarDTO) {
         SimpleResponseDTO responseDTO = null;
 
-        Car newCar = carRepository.save(new Car(
-                null,
-                newCarDTO.getType(),
-                newCarDTO.getPrice(),
-                newCarDTO.isActive()
-        ));
+        Car newCar = null;
+        try {
+            newCar = carRepository.save(new Car(
+                    null,
+                    newCarDTO.getType(),
+                    newCarDTO.getPrice(),
+                    newCarDTO.isActive(),
+                    newCarDTO.getPicture().getBytes()
+            ));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         if (newCar != null) {
             responseDTO = new SimpleResponseDTO(UserReservationStatuses.OK_SAVED.toString());
         } else {

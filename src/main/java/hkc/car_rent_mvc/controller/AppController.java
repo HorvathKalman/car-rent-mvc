@@ -32,16 +32,21 @@ public class AppController {
     }
 
     //     ------------------------ main ------------------------
+
     @GetMapping("/")
     public String index(
             Model model,
-            @RequestParam(name = "apiKey", required = false) String apiKey) {
+            @RequestParam(name = "apiKey", required = false) String apiKey
+    ) {
         //http://localhost:8080/?apiKey=adminKey1
         if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
+
             AdminPageDTO adminPageDTO = adminService.loadAdminPage();
+
             model.addAttribute("adminPageDTO", adminPageDTO);
             model.addAttribute("apiKey", apiKey);
-            return "admin.html";
+            return "admin/admin.html";
+
         } else {
             return "index.html";
         }
@@ -53,7 +58,8 @@ public class AppController {
             Model model,
             ResDateDTO selectedDateRange
     ) {
-        FreeCarsDTO freeCarsDTO = userService.getFreeCars(selectedDateRange);
+        FreeCarsDTO freeCarsDTO = userService.getAllCars(selectedDateRange);
+
         model.addAttribute("freeCarsDTO", freeCarsDTO);
         return "index.html";
     }
@@ -64,8 +70,9 @@ public class AppController {
             UserSelectionDTO selectedCar
     ) {
         UserSelectionDTO selectedCarForResPageDTO = userService.getSelectedCar(selectedCar);
+
         model.addAttribute("selectedCarForResPageDTO", selectedCarForResPageDTO);
-        return "reservation.html";
+        return "user/reservation.html";
     }
 
     @PostMapping("/cars/res/finish")
@@ -74,9 +81,11 @@ public class AppController {
             UserResDTO reservation
     ) {
         SimpleResponseDTO resultText = userService.saveReservation(reservation);
+
         model.addAttribute("resultText", resultText);
-        return "result.html";
+        return "user/result.html";
     }
+    //     -------------------------------------------------------
 
     //     ------------------------ admin ------------------------
 
@@ -87,10 +96,13 @@ public class AppController {
             @RequestParam("carId") Integer carId
     ) {
         if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
-            CarDTO selectedCarDTO = adminService.getCarForEdit(carId);
+
+            CarDTO selectedCarDTO = adminService.getCarById(carId);
+
             model.addAttribute("carDTO", selectedCarDTO);
             model.addAttribute("apiKey", apiKey);
-            return "adminEditCar.html";
+            return "admin/adminEditCar.html";
+
         } else {
             return "index.html";
         }
@@ -99,8 +111,9 @@ public class AppController {
     @PostMapping("/admin/car/edit/finish")
     public String saveEditedCar(
             Model model,
-            CarDTO carDTO,
-            @RequestParam(name = "apiKey", required = false) String apiKey
+            @RequestParam(name = "apiKey", required = false) String apiKey,
+            CarDTO carDTO
+
     ) {
         if (adminApiKey.equals(apiKey) || adminApiKey2.equals(apiKey)) {
 
@@ -110,7 +123,7 @@ public class AppController {
             model.addAttribute("responseDTO", responseDTO);
             model.addAttribute("adminPageDTO", adminPageDTO);
             model.addAttribute("apiKey", apiKey);
-            return "admin.html";
+            return "admin/admin.html";
         } else {
             return "index.html";
         }
@@ -128,10 +141,11 @@ public class AppController {
 
             model.addAttribute("responseDTO", responseDTO);
             model.addAttribute("adminPageDTO", adminPageDTO);
-            return "admin.html";
+            return "admin/admin.html";
         } else {
             return "index.html";
         }
     }
+
 }
 

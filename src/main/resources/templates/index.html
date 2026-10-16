@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Main page</title>
 </head>
 <body>
+
+<br>
 <form action="/cars" method="get">
     <label>Start date:</label>
     <input type="date" name="startDate" required>
@@ -14,18 +16,17 @@
 </form>
 <br>
 
+<form action="/cars/res/start" method="get"
+      th:if="${freeCarsDTO != null}">
 
-<<form action="/cars/res/start" method="get"
-       th:if="${freeCarsDTO != null}">
+    <label>Choose a car:</label>
 
-    <label for="carId">Choose a car:</label>
-
-    <select name="carId" id="carId" required>
-        <option value="">-- Select a car --</option>
+    <select name="carId" required>
+        <option value="">-- Select a free car --</option>
 
         <option th:each="car : ${freeCarsDTO.freeCars}"
                 th:value="${car.id}"
-                th:text="${car.type + ' - ' + car.price}">
+                th:text="${car.type + ' - daily price: ' + car.price}">
         </option>
     </select>
 
